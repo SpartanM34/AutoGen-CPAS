@@ -9,4 +9,4 @@ readme = "README.md"
 dependencies = ["openai", "numpy", "scikit-learn"]  # as needed
 
 [tool.hatch.build.targets.wheel]
-packages = [{include = "cpas_autogen"}]
+packages = ["autogen_cpas"]
