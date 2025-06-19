@@ -9,10 +9,11 @@ except Exception:  # pragma: no cover - optional dependency
     def config_list_from_models(*args, **kwargs):  # type: ignore[return-type]
         return []
 
-from cpas_autogen.seed_token import SeedToken
-from cpas_autogen.prompt_wrapper import wrap_with_seed_token
-from cpas_autogen.continuity_check import continuity_check
 import logging
+
+from cpas_autogen.continuity_check import continuity_check
+from cpas_autogen.prompt_wrapper import wrap_with_seed_token
+from cpas_autogen.seed_token import SeedToken
 
 ROOT = Path(__file__).resolve().parents[1]
 JSON_DIR = ROOT / "agents" / "json"
@@ -25,17 +26,17 @@ def create_system_message(idp: dict) -> str:
         f"CPAS IDP v{idp.get('idp_version')} instance declaration",
         f"Deployment Context: {idp.get('deployment_context')}",
     ]
-    capabilities = idp.get('declared_capabilities', [])
+    capabilities = idp.get("declared_capabilities", [])
     if capabilities:
         lines.append("Capabilities:\n" + "\n".join(f"- {c}" for c in capabilities))
-    constraints = idp.get('declared_constraints', [])
+    constraints = idp.get("declared_constraints", [])
     if constraints:
         lines.append("Constraints:\n" + "\n".join(f"- {c}" for c in constraints))
-    if idp.get('interaction_style'):
+    if idp.get("interaction_style"):
         lines.append(f"Interaction Style: {idp['interaction_style']}")
-    if idp.get('epistemic_stance'):
+    if idp.get("epistemic_stance"):
         lines.append(f"Epistemic Stance: {idp['epistemic_stance']}")
-    if idp.get('ethical_framework'):
+    if idp.get("ethical_framework"):
         lines.append(f"Ethical Framework: {idp['ethical_framework']}")
     return "\n".join(lines)
 
@@ -58,7 +59,7 @@ def generate_agent_module(json_path: Path) -> str:
         "\nconfig_list = config_list_from_models([IDP_METADATA['model_family']])",
         "",
         "def create_agent():",
-        "    \"\"\"Return a ConversableAgent configured from IDP metadata.\"\"\"",
+        '    """Return a ConversableAgent configured from IDP metadata."""',
         "    system_message = '''" + create_system_message(idp) + "'''",
         "    agent = ConversableAgent(",
         "        name=IDP_METADATA['instance_name'],",
@@ -98,7 +99,7 @@ def main():
         py_name = json_file.with_suffix(".py").name
         out_path = PY_DIR / py_name
         out_path.write_text(module_text)
-        print(f"Generated {out_path.relative_to(ROOT)}")
+        logging.info("Generated %s", out_path.relative_to(ROOT))
 
 
 if __name__ == "__main__":

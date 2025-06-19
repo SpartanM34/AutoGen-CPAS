@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Realignment trigger utility."""
+
+from __future__ import annotations
 
 import logging
 from typing import Dict

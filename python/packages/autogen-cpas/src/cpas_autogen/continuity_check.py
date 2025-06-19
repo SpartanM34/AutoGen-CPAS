@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Token continuity verification utilities."""
+
+from __future__ import annotations
 
 import logging
 
