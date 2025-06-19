@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 from collections import defaultdict
 from datetime import datetime
 from itertools import combinations
@@ -29,9 +30,11 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 import matplotlib.pyplot as plt
+import torch
 from sentence_transformers import SentenceTransformer, util
 from sklearn.cluster import AgglomerativeClustering
-import torch
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 
 def load_log(path: Path) -> Dict[str, List[str]]:
@@ -196,9 +199,9 @@ def main() -> None:
 
     if entries:
         save_log(entries, Path(args.output))
-        print(f"{len(entries)} emergent clusters logged to {args.output}")
+        logging.info("%d emergent clusters logged to %s", len(entries), args.output)
     else:
-        print("No emergent clusters detected")
+        logging.info("No emergent clusters detected")
 
     if args.plot:
         labels = sorted({inst for m in data.values() for inst in m})

@@ -18,15 +18,18 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
+import logging
 from datetime import datetime
-
+from pathlib import Path
 from typing import Dict, List
 
 try:
     import matplotlib.pyplot as plt  # type: ignore
 except Exception:  # matplotlib optional
     plt = None
+
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 
 MetricDict = Dict[str, float]
@@ -141,7 +144,7 @@ def save_results(results: List[dict], path: Path) -> None:
 
 def plot_index(results: List[dict]) -> None:
     if plt is None:
-        print("Matplotlib not available; skipping plot.")
+        logging.info("Matplotlib not available; skipping plot.")
         return
     times = [datetime.fromisoformat(r["timestamp"]) for r in results]
     values = [r["wonder_index"] for r in results]
@@ -173,7 +176,7 @@ def main() -> None:
     results = compute_wonder_index(normed)
 
     save_results(results, Path(args.output))
-    print(f"Wonder Index written to {args.output}")
+    logging.info("Wonder Index written to %s", args.output)
 
     if args.plot:
         plot_index(results)

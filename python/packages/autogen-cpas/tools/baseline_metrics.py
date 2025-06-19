@@ -1,6 +1,6 @@
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 import spacy
 import torch
@@ -9,16 +9,16 @@ from sentence_transformers import util
 
 def load_metaphor_texts(base_dir: Path) -> list[str]:
     texts = []
-    for path in base_dir.glob('*.json'):
-        with open(path, 'r', encoding='utf-8') as f:
+    for path in base_dir.glob("*.json"):
+        with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        for entry in data.get('metaphors', []):
-            if isinstance(entry, dict) and 'metaphor' in entry:
-                texts.append(entry['metaphor'])
-    for name in ('README.md', 'index.md'):
+        for entry in data.get("metaphors", []):
+            if isinstance(entry, dict) and "metaphor" in entry:
+                texts.append(entry["metaphor"])
+    for name in ("README.md", "index.md"):
         fp = base_dir / name
         if fp.exists():
-            texts.append(fp.read_text(encoding='utf-8'))
+            texts.append(fp.read_text(encoding="utf-8"))
     return texts
 
 
@@ -46,28 +46,28 @@ def divergence_space(texts: list[str], nlp) -> float:
 
 
 def main():
-    base = Path('metaphor-library/DKA-E')
+    base = Path("metaphor-library/DKA-E")
     texts = load_metaphor_texts(base)
-    nlp = spacy.load('en_core_web_sm')
+    nlp = spacy.load("en_core_web_sm")
 
     metrics = {
-        'lexical_diversity': lexical_diversity(texts, nlp),
-        'symbolic_density': symbolic_density(texts, nlp),
-        'divergence_space': divergence_space(texts, nlp),
+        "lexical_diversity": lexical_diversity(texts, nlp),
+        "symbolic_density": symbolic_density(texts, nlp),
+        "divergence_space": divergence_space(texts, nlp),
     }
 
-    examples_dir = Path(__file__).resolve().parents[1] / 'docs' / 'examples'
+    examples_dir = Path(__file__).resolve().parents[1] / "docs" / "examples"
     examples_dir.mkdir(parents=True, exist_ok=True)
-    out_file = examples_dir / 'baseline_metrics.json'
+    out_file = examples_dir / "baseline_metrics.json"
     data = {}
     if out_file.exists():
-        with open(out_file, 'r', encoding='utf-8') as f:
+        with open(out_file, "r", encoding="utf-8") as f:
             data = json.load(f)
     data[datetime.utcnow().isoformat()] = metrics
-    with open(out_file, 'w', encoding='utf-8') as f:
+    with open(out_file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import numpy as np
     main()

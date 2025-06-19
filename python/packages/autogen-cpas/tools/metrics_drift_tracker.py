@@ -25,6 +25,7 @@ Run this script after the monitoring log has been updated (e.g. via
 
 import argparse
 import json
+import logging
 from datetime import datetime
 from pathlib import Path
 
@@ -34,6 +35,8 @@ try:
   import matplotlib.pyplot as plt
 except Exception:  # matplotlib is optional
   plt = None
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 
 METRICS = ["interpretive_bandwidth", "symbolic_density", "divergence_space"]
@@ -90,7 +93,7 @@ def save_results(results, path: Path):
 
 def plot_pulse(results):
   if plt is None:
-    print("Matplotlib not available; skipping plot.")
+    logging.info("Matplotlib not available; skipping plot.")
     return
   times = [datetime.fromisoformat(r["timestamp"]) for r in results]
   pulse = [r["flexibility_pulse"] for r in results]
@@ -121,8 +124,8 @@ def main():
   entries = load_log(log_path)
   results = analyze(entries)
   save_results(results, Path(args.output))
-  print("Analysis complete.")
-  print(f"Drift data written to {args.output}")
+  logging.info("Analysis complete.")
+  logging.info("Drift data written to %s", args.output)
 
   if args.plot:
     plot_pulse(results)

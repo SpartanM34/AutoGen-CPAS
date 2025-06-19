@@ -1,13 +1,14 @@
-from __future__ import annotations
-
 """Simple Flask API for T-BEEP message storage.
 
 This demo implementation stores messages in memory only. Future versions
 may persist data to SQLite and require token-based authentication.
 """
 
+from __future__ import annotations
+
 from typing import Dict, List
-from flask import Flask, request, jsonify
+
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
