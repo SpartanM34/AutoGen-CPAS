@@ -1,9 +1,9 @@
-from __future__ import annotations
-
 """Epistemic fingerprint generation utilities."""
 
-from datetime import datetime
+from __future__ import annotations
+
 import hashlib
+from datetime import datetime
 
 
 def generate_fingerprint(prompt: str, seed_token: dict) -> dict:

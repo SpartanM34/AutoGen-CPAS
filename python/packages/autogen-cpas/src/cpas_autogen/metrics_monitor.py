@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Utilities for comparing live metrics to baseline values."""
+
+from __future__ import annotations
 
 import json
 import logging
@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict
 
+from .config import BASELINE_FILE, EXAMPLES_DIR
 from .instance_diff_engine import similarity_score
-from .config import EXAMPLES_DIR, BASELINE_FILE
 
 # Default interval for periodic checks (in minutes)
 DEFAULT_INTERVAL = timedelta(minutes=30)

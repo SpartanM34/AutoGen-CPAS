@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Utility functions for retrieving latest drift metrics."""
+
+from __future__ import annotations
 
 import json
 from pathlib import Path
