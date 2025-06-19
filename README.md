@@ -101,6 +101,28 @@ Use AutoGen Studio to prototype and run multi-agent workflows without writing co
 autogenstudio ui --port 8080 --appdir ./my-app
 ```
 
+## CPAS Features and Setup
+
+CPAS adds alignment and drift monitoring utilities for AutoGen agents.
+Key components include seed tokens, continuity checks, and automatic
+realignment based on drift metrics.
+
+### Setup steps
+
+```bash
+pip install -e ./python/packages/autogen-cpas
+python agents/generate_autogen_agents.py
+```
+
+Use the mixin in your own agents:
+
+```python
+from cpas_autogen.mixins import EpistemicAgentMixin
+
+class MyAgent(EpistemicAgentMixin, ConversableAgent):
+    ...
+```
+
 ## Why Use AutoGen?
 
 <div align="center">
