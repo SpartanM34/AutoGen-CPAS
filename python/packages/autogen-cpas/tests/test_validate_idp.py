@@ -1,4 +1,5 @@
 import pytest
+
 pytest.importorskip("jsonschema")
 import runpy
 

@@ -18,12 +18,15 @@ further analysis.
 
 import argparse
 import json
-from pathlib import Path
+import logging
 from datetime import datetime
+from pathlib import Path
 
 import matplotlib.pyplot as plt
-from sentence_transformers import SentenceTransformer, util
 import torch
+from sentence_transformers import SentenceTransformer, util
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 
 def load_interpretations(path: Path) -> dict[str, list[str]]:
@@ -119,9 +122,9 @@ def main() -> None:
             matrix[i][j] = matrix[j][i] = dist
 
     save_log(labels, matrix, Path(args.log))
-    print("Divergence matrix:")
+    logging.info("Divergence matrix:")
     for row in matrix:
-        print(" ".join(f"{v:.3f}" for v in row))
+        logging.info(" ".join(f"{v:.3f}" for v in row))
 
     if not args.no_plot:
         show_heatmap(labels, matrix)

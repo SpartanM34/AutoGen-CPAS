@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 # Ensure repository root is on sys.path so 'agents' package can be imported
 ROOT = Path(__file__).resolve().parents[4]
@@ -13,7 +13,8 @@ autogen_stub.ConversableAgent = object
 autogen_stub.config_list_from_models = lambda models: []
 sys.modules.setdefault("autogen", autogen_stub)
 
-from agents import Telos
+from agents import Telos  # noqa: E402
+
 
 class StubAgent:
     def __init__(self, name=None, system_message=None, llm_config=None, description=None):
