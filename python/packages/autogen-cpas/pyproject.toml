@@ -18,4 +18,4 @@ dependencies = [
 ]  # as needed
 
 [tool.hatch.build.targets.wheel]
-packages = ["cpas_autogen"]
+packages = ["src/cpas_autogen"]
