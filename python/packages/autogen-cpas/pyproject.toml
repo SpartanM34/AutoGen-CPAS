@@ -6,7 +6,16 @@ build-backend = "hatchling.build"
 name = "cpas_autogen"
 version = "0.1.0"
 readme = "README.md"
-dependencies = ["openai", "numpy", "scikit-learn"]  # as needed
+dependencies = [
+  "openai",
+  "numpy",
+  "scikit-learn",
+  "spacy",
+  "torch",
+  "sentence-transformers",
+  "pandas",
+  "matplotlib",
+]  # as needed
 
 [tool.hatch.build.targets.wheel]
 packages = ["cpas_autogen"]
