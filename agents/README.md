@@ -17,7 +17,7 @@ The generator relies on the optional [`autogen`](https://github.com/microsoft/au
 Execute the generator from the repository root:
 
 ```bash
-python tools/generate_autogen_agents.py
+agents/generate_autogen_agents.py
 ```
 
 The script walks through `agents/json/` and writes a Python file with the same base name to `agents/python/`. For example, `agents/json/openai/Clarence-9.json` becomes `agents/python/Clarence-9.py`.
