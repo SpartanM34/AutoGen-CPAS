@@ -1,4 +1,12 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "cpas_autogen"
 version = "0.1.0"
+readme = "README.md"
 dependencies = ["openai", "numpy", "scikit-learn"]  # as needed
+
+[tool.hatch.build.targets.wheel]
+packages = [{include = "cpas_autogen"}]
