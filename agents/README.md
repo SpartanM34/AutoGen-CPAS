@@ -20,7 +20,7 @@ Execute the generator from the repository root:
 python tools/generate_autogen_agents.py
 ```
 
-The script walks through `agents/json/` and writes a Python file with the same base name to `agents/python/`. For example, `agents/json/openai-gpt4/Clarence-9.json` becomes `agents/python/Clarence-9.py`.
+The script walks through `agents/json/` and writes a Python file with the same base name to `agents/python/`. For example, `agents/json/openai/Clarence-9.json` becomes `agents/python/Clarence-9.py`.
 Each module exposes a `create_agent()` helper that constructs a `ConversableAgent` using the JSON metadata and a `send_message()` function for convenience.
 
 
