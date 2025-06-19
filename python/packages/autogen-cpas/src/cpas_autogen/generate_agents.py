@@ -96,7 +96,7 @@ def main():
         if "schema" in json_file.parts or json_file.parent.name == "python":
             continue
         module_text = generate_agent_module(json_file)
-        py_name = json_file.with_suffix(".py").name
+        py_name = json_file.with_suffix(".py").name.replace("-", "_")
         out_path = PY_DIR / py_name
         out_path.write_text(module_text)
         logging.info("Generated %s", out_path.relative_to(ROOT))

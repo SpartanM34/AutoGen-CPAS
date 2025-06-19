@@ -10,4 +10,9 @@ def __getattr__(name):
     globals()[name] = module
     return module
 
-__all__ = []
+__all__ = [
+    "Clarence_9",
+    "Lumin",
+    "Meridian",
+    "Telos",
+]
