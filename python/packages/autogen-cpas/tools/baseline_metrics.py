@@ -46,7 +46,7 @@ def divergence_space(texts: list[str], nlp) -> float:
 
 
 def main():
-    base = Path("metaphor-library/DKA-E")
+    base = Path(__file__).resolve().parents[1] / "metaphor-library" / "DKA-E"
     texts = load_metaphor_texts(base)
     nlp = spacy.load("en_core_web_sm")
 
