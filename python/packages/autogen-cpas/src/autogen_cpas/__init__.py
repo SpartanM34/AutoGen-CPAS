@@ -1,5 +1,12 @@
-from .models import ChatMessage
-from .protocol import Role
 from .agent import EchoAgent
+from .models import ChatMessage, CPASMetadata, TBeepMessage
+from .protocol import RIFG, Role
 
-__all__ = ["ChatMessage", "Role", "EchoAgent"]
+__all__ = [
+    "ChatMessage",
+    "CPASMetadata",
+    "TBeepMessage",
+    "Role",
+    "RIFG",
+    "EchoAgent",
+]
