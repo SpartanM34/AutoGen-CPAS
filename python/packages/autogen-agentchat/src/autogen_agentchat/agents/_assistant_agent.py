@@ -17,7 +17,7 @@ from typing import (
 )
 
 from autogen_core import CancellationToken, Component, ComponentModel, FunctionCall
-from autogen_core.memory import Memory
+from autogen_core.memory import Memory, MemoryContent, MemoryMimeType
 from autogen_core.model_context import (
     ChatCompletionContext,
     UnboundedChatCompletionContext,
@@ -38,7 +38,7 @@ from typing_extensions import Self
 
 from .. import EVENT_LOGGER_NAME
 from ..base import Handoff as HandoffBase
-from ..base import Response
+from ..base import Response, TaskResult
 from ..messages import (
     BaseAgentEvent,
     BaseChatMessage,
@@ -378,7 +378,9 @@ class AssistantAgent(BaseChatAgent, Component[AssistantAgentConfig]):
                         reflect_on_tool_use=True,
                     )
                     await Console(
-                        assistant.run_stream(task="Go to https://github.com/microsoft/autogen and tell me what you see.")
+                        assistant.run_stream(
+                            task="Go to https://github.com/microsoft/autogen and tell me what you see."
+                        )
                     )
 
 
@@ -1379,6 +1381,52 @@ class AssistantAgent(BaseChatAgent, Component[AssistantAgentConfig]):
         assistant_agent_state = AssistantAgentState.model_validate(state)
         # Load the model context state.
         await self._model_context.load_state(assistant_agent_state.llm_context)
+
+    async def reflect(
+        self,
+        messages: Sequence[BaseAgentEvent | BaseChatMessage],
+        *,
+        scaffold_metadata: Dict[str, str] | None = None,
+    ) -> None:
+        """Record a summary or thought event into memory."""
+
+        if not self._memory:
+            return
+
+        thoughts = [m.content for m in messages if isinstance(m, ThoughtEvent)]
+        if thoughts:
+            summary = "\n".join(thoughts)
+        elif messages:
+            last = messages[-1]
+            if hasattr(last, "to_text"):
+                summary = last.to_text()
+            else:
+                summary = str(getattr(last, "content", ""))
+        else:
+            summary = ""
+
+        mem_content = MemoryContent(
+            content=summary,
+            mime_type=MemoryMimeType.TEXT,
+            metadata=scaffold_metadata,
+        )
+        for mem in self._memory:
+            await mem.add(mem_content)
+
+    async def run(
+        self,
+        *,
+        task: str | BaseChatMessage | Sequence[BaseChatMessage] | None = None,
+        cancellation_token: CancellationToken | None = None,
+        reflect: bool = False,
+        scaffold_metadata: Dict[str, str] | None = None,
+    ) -> TaskResult:
+        """Run the agent and optionally reflect after completion."""
+
+        result = await super().run(task=task, cancellation_token=cancellation_token)
+        if reflect and not self._reflect_on_tool_use:
+            await self.reflect(result.messages, scaffold_metadata=scaffold_metadata)
+        return result
 
     @staticmethod
     def _get_compatible_context(model_client: ChatCompletionClient, messages: List[LLMMessage]) -> Sequence[LLMMessage]:

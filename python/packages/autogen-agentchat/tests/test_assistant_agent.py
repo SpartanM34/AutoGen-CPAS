@@ -1632,3 +1632,28 @@ async def test_tools_deserialize_aware() -> None:
     assert result.messages[-1].content == "Hello, World!"  # type: ignore
     assert result.messages[-1].type == "ToolCallSummaryMessage"  # type: ignore
     assert isinstance(result.messages[-1], ToolCallSummaryMessage)  # type: ignore
+
+
+@pytest.mark.asyncio
+async def test_run_reflection_adds_memory() -> None:
+    model_client = ReplayChatCompletionClient(["Hi"])
+    memory = ListMemory()
+    agent = AssistantAgent("assistant", model_client=model_client, memory=[memory])
+    await agent.run(task="hello", reflect=True, scaffold_metadata={"tag": "test"})
+    assert len(memory.content) == 1
+    assert memory.content[0].metadata == {"tag": "test"}
+    assert "Hi" in str(memory.content[0].content)
+
+
+@pytest.mark.asyncio
+async def test_run_reflection_skipped_when_tool_reflection_enabled() -> None:
+    model_client = ReplayChatCompletionClient(["Hi"])
+    memory = ListMemory()
+    agent = AssistantAgent(
+        "assistant",
+        model_client=model_client,
+        memory=[memory],
+        reflect_on_tool_use=True,
+    )
+    await agent.run(task="hello", reflect=True)
+    assert len(memory.content) == 0

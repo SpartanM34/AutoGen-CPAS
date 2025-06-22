@@ -55,6 +55,27 @@ async def main() -> None:
 asyncio.run(main())
 ```
 
+### Recording Thoughts
+
+Store a quick reflection after each run using a memory implementation.
+
+```python
+import asyncio
+from autogen_agentchat.agents import AssistantAgent
+from autogen_ext.models.openai import OpenAIChatCompletionClient
+from autogen_core.memory import ListMemory
+
+async def main() -> None:
+    memory = ListMemory()
+    model_client = OpenAIChatCompletionClient(model="gpt-4o")
+    agent = AssistantAgent("assistant", model_client=model_client, memory=[memory])
+    await agent.run(task="Any tips for today?", reflect=True, scaffold_metadata={"stage": "demo"})
+    print(memory.content[-1].content)
+    await model_client.close()
+
+asyncio.run(main())
+```
+
 ### Web Browsing Agent Team
 
 Create a group chat team with a web surfer agent and a user proxy agent
