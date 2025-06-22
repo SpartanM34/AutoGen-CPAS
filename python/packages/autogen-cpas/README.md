@@ -2,6 +2,9 @@
 
 Welcome to the official repository for **CPAS-Core** (Contextual Prompt Architecture Standard), now updated to **v1.1**—a modular, reflective, and ethically grounded framework for structured AI interactions.
 
+> **Note**
+> To run the sample agents you will need API keys such as `OPENAI_API_KEY`. See the [environment variable guide](../../../docs/environment_variables.md) for details.
+
 ## What This Repository Contains
 
 ### CPAS-Core v1.1
