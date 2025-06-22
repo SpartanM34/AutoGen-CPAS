@@ -42,7 +42,7 @@ export OAI_CONFIG_LIST=$(cat ./OAI_CONFIG_LIST)
 
 If an OAI_CONFIG_LIST is *not* provided (by means of file or environment variable), AutoGenBench will use the OPENAI_API_KEY environment variable instead.
 
-For some benchmark scenarios, additional keys may be required (e.g., keys for the Bing Search API). These can be added to an `ENV.json` file in the current working folder. An example `ENV.json` file is provided below:
+For some benchmark scenarios, additional keys may be required (e.g., keys for the Bing Search API). These can be added to an `ENV.json` file in the current working folder. See the [environment variable guide](../../../docs/environment_variables.md) for an overview of commonly used keys. An example `ENV.json` file is provided below:
 
 ```
 {
