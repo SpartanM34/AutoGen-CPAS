@@ -1,6 +1,6 @@
-from .agent import EchoAgent
+from .agent import CpasEnabledAgent, EchoAgent
 from .models import ChatMessage, CPASMetadata, TBeepMessage
-from .protocol import RIFG, Role
+from .protocol import RIFG, Role, decode, encode
 
 __all__ = [
     "ChatMessage",
@@ -9,4 +9,7 @@ __all__ = [
     "Role",
     "RIFG",
     "EchoAgent",
+    "CpasEnabledAgent",
+    "encode",
+    "decode",
 ]
