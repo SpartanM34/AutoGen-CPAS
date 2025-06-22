@@ -10,6 +10,13 @@ from .models import ChatMessage, CPASMetadata, TBeepMessage
 from .protocol import Role, decode, encode
 
 
+def _bayesian_confidence(prior: float, reliability: float = 0.6) -> float:
+    """Return the posterior confidence using a simple Bayesian update."""
+    numerator = prior * reliability
+    denominator = numerator + (1 - prior) * (1 - reliability)
+    return round(numerator / denominator, 3)
+
+
 class EchoAgent(RoutedAgent):
     """Minimal agent that echoes user content."""
 
@@ -30,12 +37,13 @@ class CpasEnabledAgent(ConversableAgent):
         return super().receive(message, sender=sender, **kwargs)
 
     def generate_reply(self, messages, sender=None, **kwargs):  # type: ignore[override]
-        """Return an echo response with incremented confidence and provenance."""
+        """Return an echo response with updated confidence and provenance."""
         raw = messages[-1]
         incoming = decode(raw)
         meta = incoming.metadata
+        new_confidence = _bayesian_confidence(meta.confidence)
         new_meta = CPASMetadata(
-            confidence=min(meta.confidence + 0.1, 1.0),
+            confidence=new_confidence,
             rifg=meta.rifg,
             provenance=[*meta.provenance, self.name],
             notes=meta.notes,
