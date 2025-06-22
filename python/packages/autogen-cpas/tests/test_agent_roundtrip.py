@@ -8,7 +8,7 @@ autogen_stub.ConversableAgent = object
 autogen_stub.config_list_from_models = lambda models: []
 sys.modules.setdefault("autogen", autogen_stub)
 
-from autogen_cpas.agent import EchoAgent
+from autogen_cpas.agent import EchoAgent, _bayesian_confidence
 from autogen_cpas.models import ChatMessage
 from autogen_cpas.protocol import Role
 
@@ -38,3 +38,9 @@ async def test_send_to_unknown_agent_raises() -> None:
             recipient=AgentId("missing", "default"),
         )
     await runtime.stop()
+
+
+def test_bayesian_confidence_bounds() -> None:
+    """_bayesian_confidence should return values within [0,1] at the extremes."""
+    assert 0.0 <= _bayesian_confidence(0.0) <= 1.0
+    assert 0.0 <= _bayesian_confidence(1.0) <= 1.0
