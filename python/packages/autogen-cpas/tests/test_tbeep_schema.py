@@ -78,3 +78,36 @@ def test_invalid_message_raises() -> None:
     }
     with pytest.raises(ValidationError):
         validate_tbeep_message(invalid)
+
+
+def test_unexpected_message_field() -> None:
+    msg = _sample_message().to_dict()
+    msg["extra"] = "oops"
+    with pytest.raises(ValidationError):
+        validate_tbeep_message(msg)
+
+
+def test_unexpected_metadata_field() -> None:
+    msg = _sample_message().to_dict()
+    msg["metadata"]["extra"] = "nope"
+    with pytest.raises(ValidationError):
+        validate_tbeep_message(msg)
+
+
+def test_missing_message_field() -> None:
+    msg = _sample_message().to_dict()
+    msg.pop("sender")
+    with pytest.raises(ValidationError):
+        validate_tbeep_message(msg)
+
+
+def test_missing_metadata_field() -> None:
+    msg = _sample_message().to_dict()
+    msg["metadata"].pop("provenance")
+    with pytest.raises(ValidationError):
+        validate_tbeep_message(msg)
+
+
+def test_protocol_decode_type_error() -> None:
+    with pytest.raises(TypeError):
+        protocol.decode("not a dict")
