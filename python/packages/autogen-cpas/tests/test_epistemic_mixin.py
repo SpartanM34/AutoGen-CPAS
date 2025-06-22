@@ -126,3 +126,24 @@ def test_generate_reply_triggers_realign(monkeypatch):
     msgs = [{"role": "user", "content": "hi"}]
     agent.generate_reply(msgs, thread_token="#COMM_PROTO")
     assert agent.seed_token is not old_seed
+
+
+def test_generate_reply_empty_messages_uses_super():
+    meta = {
+        "id": "1",
+        "model": "gpt",
+        "timestamp": "2025",
+        "alignment_profile": "CPAS-Core v1.1",
+    }
+    agent = DummyAgent()
+    agent.idp_metadata = meta
+    agent.conversable_setup()
+    old_seed = agent.seed_token
+
+    result = agent.generate_reply([])
+
+    assert result == "ok"
+    assert len(agent.generate_reply_calls) == 1
+    assert agent.generate_reply_calls[0][0] == []
+    assert agent.last_fingerprint is None
+    assert agent.seed_token is old_seed
