@@ -77,3 +77,21 @@ def test_generate_agent_module(tmp_path):
     assert "from autogen import ConversableAgent" in module_text
     assert "SeedToken" in module_text
     assert "Foo" in module_text
+
+
+def test_create_system_message():
+    """System message lists capabilities, constraints, and context."""
+    from cpas_autogen.generate_agents import create_system_message
+
+    idp = {
+        "idp_version": "1.0",
+        "deployment_context": "production",
+        "declared_capabilities": ["cap1", "cap2"],
+        "declared_constraints": ["con1", "con2"],
+    }
+    msg = create_system_message(idp)
+    assert "Deployment Context: production" in msg
+    for c in idp["declared_capabilities"]:
+        assert f"- {c}" in msg
+    for c in idp["declared_constraints"]:
+        assert f"- {c}" in msg
