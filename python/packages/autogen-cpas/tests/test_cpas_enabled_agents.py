@@ -60,6 +60,12 @@ def test_receive_malformed_message_raises() -> None:
         agent.receive({"bad": "data"})
 
 
+def test_generate_reply_malformed_message_raises() -> None:
+    agent = CpasEnabledAgent(name="a")
+    with pytest.raises(ValidationError):
+        agent.generate_reply([{"bad": "data"}])
+
+
 @pytest.mark.asyncio
 async def test_provenance_accumulates() -> None:
     runtime = SingleThreadedAgentRuntime()
