@@ -33,6 +33,8 @@ A modular standard for layered AI interaction, cross-instance collaboration, and
 ### Additional Resources
 
 - [**CPAS-Core v1.1 Specification**](docs/specs/current/CPAS-Core-v1.1.md)
+- [**CPAS Metadata Schema**](../../schema/cpas_metadata.schema.json)
+- [**T-BEEP Message Schema**](../../schema/tbeep_message.schema.json)
 - [**Changelog**](docs/specs/CHANGELOG.md)
 - [**Metaphor Library (including DKA-E metaphors)**](./metaphor-library/)
 - [**Compliance Tests**](./compliance-tests/)
