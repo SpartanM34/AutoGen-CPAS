@@ -41,9 +41,9 @@ A modular standard for layered AI interaction, cross-instance collaboration, and
 git clone <repo-url> && cd Reflective-AI-and-CPAS-Core
 pip install -r requirements.txt
 pip install -e ".[web]"
-python tools/generate_autogen_agents.py
+autogen-cpas-gen-agents
 streamlit run ui/dashboard.py &
-flask run --app api/tbeep_api.py
+autogen-cpas-api
 ```
 
 ## Installation
@@ -79,7 +79,7 @@ messages in memory only. Persistent storage and authentication are pending. This
 feature also requires the `web` extras. Start the API with:
 
 ```bash
-python api/tbeep_api.py
+autogen-cpas-api
 ```
 
 Messages can then be POSTed to `/api/v1/messages` and fetched by thread ID via `GET /api/v1/messages?thread_id=`.

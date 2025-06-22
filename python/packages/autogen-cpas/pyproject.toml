@@ -14,6 +14,10 @@ dependencies = [
     "pydantic>=2,<3",
 ]
 
+[project.scripts]
+autogen-cpas-api = "autogen_cpas.api.tbeep_api:main"
+autogen-cpas-gen-agents = "cpas_autogen.generate_agents:main"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/autogen_cpas"]
 

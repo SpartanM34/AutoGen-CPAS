@@ -38,5 +38,10 @@ def get_messages():
     return jsonify(MESSAGE_STORE.get(thread_id, []))
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Run the development server."""
     app.run(debug=True)
+
+
+if __name__ == "__main__":
+    main()
