@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from autogen.core import ConversableAgent
+from autogen import ConversableAgent
 from autogen_core import MessageContext, RoutedAgent, message_handler
 
 from .models import ChatMessage, CPASMetadata, TBeepMessage
