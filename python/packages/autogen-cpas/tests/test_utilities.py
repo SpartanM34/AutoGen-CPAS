@@ -88,3 +88,35 @@ def test_wrap_and_fingerprint():
     assert set(["fingerprint", "timestamp", "prompt", "model", "alignment_profile"]) <= fp.keys()
     assert len(fp["fingerprint"]) == 64
 
+
+from cpas_autogen.instance_diff_engine import similarity_score, compare_seed_tokens
+
+
+def test_similarity_score_all_match():
+    t1 = {"alignment_profile": "a", "model": "m", "hash": "h", "extra": 1}
+    t2 = {"alignment_profile": "a", "model": "m", "hash": "h", "extra": 1}
+    assert similarity_score(t1, t2) == 1.0
+
+
+def test_similarity_score_partial_match():
+    t1 = {"alignment_profile": "a", "model": "m1", "hash": "h"}
+    t2 = {"alignment_profile": "a", "model": "m2", "hash": "h"}
+    assert similarity_score(t1, t2) == pytest.approx(2 / 3)
+
+
+def test_compare_seed_tokens_all_match():
+    t1 = {"alignment_profile": "a", "model": "m", "hash": "h"}
+    t2 = {"alignment_profile": "a", "model": "m", "hash": "h"}
+    report = compare_seed_tokens(t1, t2)
+    assert all(report[f]["match"] for f in ["alignment_profile", "model", "hash"])
+    assert report["similarity"] == 1.0
+
+
+def test_compare_seed_tokens_partial_match():
+    t1 = {"alignment_profile": "a", "model": "m1", "hash": "h"}
+    t2 = {"alignment_profile": "a", "model": "m2", "hash": "h2"}
+    report = compare_seed_tokens(t1, t2)
+    assert report["alignment_profile"]["match"]
+    assert not report["model"]["match"]
+    assert not report["hash"]["match"]
+    assert report["similarity"] == pytest.approx(1 / 3)
