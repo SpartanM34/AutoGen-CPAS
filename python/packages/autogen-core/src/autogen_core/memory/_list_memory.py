@@ -42,8 +42,12 @@ class ListMemory(Memory, Component[ListMemoryConfig]):
                 # Initialize memory
                 memory = ListMemory(name="chat_history")
 
-                # Add memory content
-                content = MemoryContent(content="User prefers formal language", mime_type="text/plain")
+                # Add memory content with metadata
+                content = MemoryContent(
+                    content="User prefers formal language",
+                    mime_type="text/plain",
+                    metadata={"source": "profile"},
+                )
                 await memory.add(content)
 
                 # Directly modify memory contents
@@ -120,7 +124,12 @@ class ListMemory(Memory, Component[ListMemoryConfig]):
         if not self._contents:
             return UpdateContextResult(memories=MemoryQueryResult(results=[]))
 
-        memory_strings = [f"{i}. {str(memory.content)}" for i, memory in enumerate(self._contents, 1)]
+        memory_strings: List[str] = []
+        for i, memory in enumerate(self._contents, 1):
+            entry = f"{i}. {str(memory.content)}"
+            if memory.metadata:
+                entry += f" (metadata: {memory.metadata})"
+            memory_strings.append(entry)
 
         if memory_strings:
             memory_context = "\nRelevant memory content (in chronological order):\n" + "\n".join(memory_strings) + "\n"
@@ -149,6 +158,20 @@ class ListMemory(Memory, Component[ListMemoryConfig]):
 
     async def add(self, content: MemoryContent, cancellation_token: CancellationToken | None = None) -> None:
         """Add new content to memory.
+
+        Metadata associated with the :class:`~autogen_core.memory.MemoryContent`
+        is preserved and returned from :meth:`query` and :meth:`update_context`.
+
+        Example:
+
+            .. code-block:: python
+
+                content = MemoryContent(
+                    content="User prefers formal language",
+                    mime_type="text/plain",
+                    metadata={"source": "profile"},
+                )
+                await memory.add(content)
 
         Args:
             content: Memory content to store

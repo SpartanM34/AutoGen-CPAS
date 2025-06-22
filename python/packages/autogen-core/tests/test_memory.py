@@ -175,3 +175,26 @@ async def test_list_memory_content_types() -> None:
     assert isinstance(results.results[0].content, str)
     assert isinstance(results.results[1].content, dict)
     assert isinstance(results.results[2].content, bytes)
+
+
+@pytest.mark.asyncio
+async def test_list_memory_metadata_roundtrip() -> None:
+    """Metadata should be preserved through add -> query -> update_context."""
+    memory = ListMemory()
+    metadata = {"origin": "unit_test", "rating": 5}
+    content = MemoryContent(
+        content="test with metadata",
+        mime_type=MemoryMimeType.TEXT,
+        metadata=metadata,
+    )
+
+    await memory.add(content)
+
+    query_results = await memory.query(MemoryContent(content="", mime_type=MemoryMimeType.TEXT))
+    assert query_results.results[0].metadata == metadata
+
+    context = BufferedChatCompletionContext(buffer_size=3)
+    update_result = await memory.update_context(context)
+    assert update_result.memories.results[0].metadata == metadata
+    messages = await context.get_messages()
+    assert metadata["origin"] in messages[0].content
