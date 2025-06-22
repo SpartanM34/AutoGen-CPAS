@@ -1,6 +1,7 @@
 import sys
 import types
 from pathlib import Path
+import json
 
 # Ensure repository root is on sys.path so 'agents' package can be imported
 ROOT = Path(__file__).resolve().parents[4]
@@ -53,3 +54,26 @@ def test_send_message(monkeypatch):
     assert result["role"] == "assistant"
     assert agent.last_fingerprint is not None
     assert agent.generate_reply_inputs[0][0][0]["content"].startswith("### Seed Instance")
+
+
+def test_generate_agent_module(tmp_path):
+    """Generated module text contains imports and instance name."""
+    from cpas_autogen.generate_agents import generate_agent_module
+
+    idp = {
+        "idp_version": "1.0",
+        "instance_name": "Foo",
+        "model_family": "test",
+        "deployment_context": "ctx",
+        "declared_capabilities": ["c1"],
+        "declared_constraints": ["cons"],
+        "interaction_style": "friendly",
+        "epistemic_stance": "neutral",
+        "ethical_framework": "open",
+    }
+    json_file = tmp_path / "foo.json"
+    json_file.write_text(json.dumps(idp))
+    module_text = generate_agent_module(json_file)
+    assert "from autogen import ConversableAgent" in module_text
+    assert "SeedToken" in module_text
+    assert "Foo" in module_text
