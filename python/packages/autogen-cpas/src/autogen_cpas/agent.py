@@ -157,7 +157,12 @@ class AsyncCpasAgent(BaseChatAgent):
             encoded_messages.append(encoded)
         reply = await self.a_generate_reply(encoded_messages, sender=messages[-1].source)
         decoded = decode(reply)
-        return Response(chat_message=TBeepChatMessage(content=decoded, source=self.name))
+        return Response(
+            chat_message=TBeepChatMessage(
+                content=decoded.model_dump(mode="python"),
+                source=self.name,
+            )
+        )
 
     async def on_reset(self, cancellation_token: CancellationToken) -> None:
         pass

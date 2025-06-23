@@ -55,8 +55,8 @@ async def test_async_cpas_agent_roundtrip() -> None:
     response = await async_agent.on_messages([wrapped], CancellationToken())
     out = response.chat_message.content
 
-    assert out.content == "hello"
-    assert out.recipient == "user"
-    assert out.metadata.confidence == pytest.approx(0.6)
-    assert out.metadata.provenance == ["unit", "1"]
+    assert out["content"] == "hello"
+    assert out["recipient"] == "user"
+    assert out["metadata"]["confidence"] == pytest.approx(0.6)
+    assert out["metadata"]["provenance"] == ["unit", "1"]
 
