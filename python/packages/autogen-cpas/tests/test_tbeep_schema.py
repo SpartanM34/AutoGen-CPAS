@@ -111,3 +111,8 @@ def test_missing_metadata_field() -> None:
 def test_protocol_decode_value_error() -> None:
     with pytest.raises(ValueError):
         protocol.decode("not a dict")
+
+
+def test_protocol_decode_type_error() -> None:
+    with pytest.raises(TypeError):
+        protocol.decode(123)

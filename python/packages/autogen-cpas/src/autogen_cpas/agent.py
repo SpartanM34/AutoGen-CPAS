@@ -16,6 +16,7 @@ from typing import Any, Iterable, Mapping, Sequence
 #     "content": "hello",
 #     "metadata": {"confidence": 0.6, "rifg": 0.25, "provenance": ["unit"]}
 # }
+# Import ConversableAgent from the updated autogen package
 from autogen import ConversableAgent
 from autogen_agentchat.agents import BaseChatAgent
 from autogen_agentchat.base import Response

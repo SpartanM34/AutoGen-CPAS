@@ -4,7 +4,20 @@ import pytest
 from autogen_core import AgentId, SingleThreadedAgentRuntime
 
 autogen_stub = types.ModuleType("autogen")
-autogen_stub.ConversableAgent = object
+
+
+class _DummyCA:
+    def __init__(self, *args, name: str | None = None, **kwargs) -> None:
+        self.name = name or "bot"
+
+    def receive(self, *args, **kwargs):
+        pass
+
+    def generate_reply(self, *args, **kwargs):
+        return {}
+
+
+autogen_stub.ConversableAgent = _DummyCA
 autogen_stub.config_list_from_models = lambda models: []
 sys.modules.setdefault("autogen", autogen_stub)
 
