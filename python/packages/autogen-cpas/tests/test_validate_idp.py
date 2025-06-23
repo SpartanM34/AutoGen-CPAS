@@ -39,3 +39,16 @@ def test_validate_instance_invalid_enum(tmp_path, caplog):
     with caplog.at_level(logging.ERROR):
         validate_instance(str(instance_file), schema)
     assert "Validation failed" in caplog.text
+
+
+def test_validate_instance_additional_property(tmp_path, caplog):
+    """Validation fails when instance has an unexpected property."""
+    schema = "agents/idp-v1.0-schema.json"
+    data = json.load(open("agents/json/openai/Clarence-9.json"))
+    data["bogus_key"] = "bogus"
+    instance_file = tmp_path / "extra_prop.json"
+    with instance_file.open("w") as f:
+        json.dump(data, f)
+    with caplog.at_level(logging.ERROR):
+        validate_instance(str(instance_file), schema)
+    assert "Validation failed" in caplog.text
