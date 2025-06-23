@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+import numpy as np
 import spacy
 import torch
 from sentence_transformers import util
@@ -69,5 +70,4 @@ def main():
 
 
 if __name__ == "__main__":
-    import numpy as np
     main()
