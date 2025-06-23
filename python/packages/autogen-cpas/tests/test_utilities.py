@@ -142,3 +142,12 @@ def test_generate_fingerprint_not_equal() -> None:
     fp1 = generate_fingerprint("hello", seed)
     fp2 = generate_fingerprint("bye", seed)
     assert fp1["fingerprint"] != fp2["fingerprint"]
+
+
+def test_fingerprint_differs_for_seed_token() -> None:
+    """Same prompt but different seed token should produce different fingerprints."""
+    seed1 = {"model": "m1", "alignment_profile": "a"}
+    seed2 = {"model": "m2", "alignment_profile": "a"}
+    fp1 = generate_fingerprint("hello", seed1)
+    fp2 = generate_fingerprint("hello", seed2)
+    assert fp1["fingerprint"] != fp2["fingerprint"]
