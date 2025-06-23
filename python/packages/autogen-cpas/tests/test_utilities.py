@@ -151,3 +151,16 @@ def test_fingerprint_differs_for_seed_token() -> None:
     fp1 = generate_fingerprint("hello", seed1)
     fp2 = generate_fingerprint("hello", seed2)
     assert fp1["fingerprint"] != fp2["fingerprint"]
+
+@pytest.mark.parametrize(
+    "prompt1,prompt2,seed1,seed2",
+    [
+        ("alpha", "beta", {"model": "m", "alignment_profile": "a"}, {"model": "m", "alignment_profile": "a"}),
+        ("hello", "hello", {"model": "m1", "alignment_profile": "a"}, {"model": "m2", "alignment_profile": "a"}),
+    ],
+)
+def test_generate_fingerprint_variation(prompt1, prompt2, seed1, seed2) -> None:
+    """Fingerprints should differ when prompts or seed tokens differ."""
+    fp1 = generate_fingerprint(prompt1, seed1)
+    fp2 = generate_fingerprint(prompt2, seed2)
+    assert fp1["fingerprint"] != fp2["fingerprint"]
