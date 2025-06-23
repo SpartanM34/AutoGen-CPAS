@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 from .protocol import RIFG, Role
 
@@ -22,6 +22,8 @@ class CPASMetadata(BaseModel):
     rifg: RIFG
     provenance: List[str]
     notes: Optional[str] = None
+
+    model_config = ConfigDict(extra="forbid")
 
     @field_validator("confidence")
     @classmethod
@@ -43,6 +45,8 @@ class TBeepMessage(BaseModel):
     recipient: str
     content: str
     metadata: CPASMetadata
+
+    model_config = ConfigDict(extra="forbid")
 
     def to_dict(self) -> dict:
         """Return the serializable representation."""
