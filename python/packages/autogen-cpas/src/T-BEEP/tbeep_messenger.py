@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Utilities for constructing T-BEEP messages."""
+
+from __future__ import annotations
 
 import uuid
 from datetime import datetime
