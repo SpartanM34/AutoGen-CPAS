@@ -51,6 +51,24 @@ def test_get_epistemic_fingerprint_stable():
     assert fp1 == fp2 == fp3
 
 
+def test_get_epistemic_fingerprint_changes_after_metadata_update():
+    meta = {
+        "id": "1",
+        "model": "gpt",
+        "timestamp": "2025",
+        "alignment_profile": "CPAS-Core v1.1",
+    }
+    agent = DummyAgent()
+    agent.idp_metadata = meta
+    agent.conversable_setup()
+    initial_fp = agent.get_epistemic_fingerprint()
+
+    agent.idp_metadata = {**meta, "model": "gpt-4"}
+    updated_fp = agent.get_epistemic_fingerprint()
+
+    assert initial_fp != updated_fp
+
+
 def test_generate_reply_updates_fingerprint_and_wraps(monkeypatch):
     meta = {
         "id": "1",
