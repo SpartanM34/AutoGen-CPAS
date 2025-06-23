@@ -1,17 +1,27 @@
 from __future__ import annotations
 
-import uuid
-from datetime import datetime
-
 import asyncio
 import logging
-from typing import Any, Mapping, Sequence
+import uuid
+from datetime import datetime
+from typing import Any, Iterable, Mapping, Sequence
 
+# Example memory entry stored by ``CpasEnabledAgent``:
+# {
+#     "id": "<uuid>",
+#     "timestamp": "2024-01-01T00:00:00Z",
+#     "role": "assistant",
+#     "sender": "agent",
+#     "recipient": "user",
+#     "content": "hello",
+#     "metadata": {"confidence": 0.6, "rifg": 0.25, "provenance": ["unit"]}
+# }
 from autogen import ConversableAgent
 from autogen_agentchat.agents import BaseChatAgent
 from autogen_agentchat.base import Response
 from autogen_agentchat.messages import StructuredMessage
 from autogen_core import CancellationToken, MessageContext, RoutedAgent, message_handler
+from autogen_core.memory import MemoryContent, MemoryMimeType
 
 from .models import ChatMessage, CPASMetadata, TBeepMessage
 from .protocol import Role, decode, encode
@@ -22,6 +32,16 @@ def _bayesian_confidence(prior: float, reliability: float = 0.6) -> float:
     numerator = prior * reliability
     denominator = numerator + (1 - prior) * (1 - reliability)
     return round(numerator / denominator, 3)
+
+
+def aggregate_bayesian_confidence(scores: Sequence[float]) -> float:
+    """Return a cumulative Bayesian confidence across ``scores``."""
+    if not scores:
+        return 0.5
+    posterior = scores[0]
+    for score in scores[1:]:
+        posterior = _bayesian_confidence(posterior, score)
+    return posterior
 
 
 class EchoAgent(RoutedAgent):
@@ -48,7 +68,30 @@ class CpasEnabledAgent(ConversableAgent):
         raw = messages[-1]
         incoming = decode(raw)
         meta = incoming.metadata
-        new_confidence = _bayesian_confidence(meta.confidence)
+
+        prior_scores: list[float] = []
+        memory_attr = getattr(self, "memory", None)
+        if memory_attr:
+            memories: Iterable[Any] = memory_attr if isinstance(memory_attr, Sequence) else [memory_attr]
+            for mem in memories:
+                try:
+                    result = asyncio.run(mem.query(MemoryContent(content="", mime_type=MemoryMimeType.JSON)))
+                except Exception:
+                    continue
+                for item in result.results:
+                    data = item.content
+                    if not isinstance(data, Mapping):
+                        continue
+                    participants = {data.get("sender"), data.get("recipient")}
+                    if participants == {self.name, incoming.sender}:
+                        m = data.get("metadata", {})
+                        if isinstance(m, Mapping) and "confidence" in m:
+                            try:
+                                prior_scores.append(float(m["confidence"]))
+                            except (TypeError, ValueError):
+                                pass
+
+        new_confidence = aggregate_bayesian_confidence([meta.confidence, *prior_scores])
         new_meta = CPASMetadata(
             confidence=new_confidence,
             rifg=meta.rifg,
@@ -64,6 +107,14 @@ class CpasEnabledAgent(ConversableAgent):
             content=incoming.content,
             metadata=new_meta,
         )
+        if memory_attr:
+            entry = MemoryContent(content=reply.to_dict(), mime_type=MemoryMimeType.JSON)
+            for mem in memories:
+                try:
+                    asyncio.run(mem.add(entry))
+                except Exception:
+                    pass
+
         return encode(reply)
 
 
