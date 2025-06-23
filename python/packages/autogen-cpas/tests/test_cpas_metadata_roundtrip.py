@@ -2,6 +2,8 @@ import importlib.util
 import sys
 import types
 from datetime import datetime
+from importlib.resources import files
+
 import pytest
 
 
@@ -12,7 +14,7 @@ def _load_modules():
 
     spec_protocol = importlib.util.spec_from_file_location(
         "autogen_cpas.protocol",
-        "python/packages/autogen-cpas/src/autogen_cpas/protocol.py",
+        str(files("autogen_cpas").joinpath("protocol.py")),
     )
     protocol = importlib.util.module_from_spec(spec_protocol)
     protocol.__package__ = "autogen_cpas"
@@ -21,7 +23,7 @@ def _load_modules():
 
     spec_models = importlib.util.spec_from_file_location(
         "autogen_cpas.models",
-        "python/packages/autogen-cpas/src/autogen_cpas/models.py",
+        str(files("autogen_cpas").joinpath("models.py")),
     )
     models = importlib.util.module_from_spec(spec_models)
     models.__package__ = "autogen_cpas"
