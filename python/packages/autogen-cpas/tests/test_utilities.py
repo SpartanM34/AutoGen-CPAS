@@ -120,3 +120,11 @@ def test_compare_seed_tokens_partial_match():
     assert not report["model"]["match"]
     assert not report["hash"]["match"]
     assert report["similarity"] == pytest.approx(1 / 3)
+
+
+def test_seed_token_no_shared_keys() -> None:
+    token1 = {"foo": 1}
+    token2 = {"bar": 2}
+    assert similarity_score(token1, token2) == 0.0
+    report = compare_seed_tokens(token1, token2)
+    assert report["similarity"] == 0.0
