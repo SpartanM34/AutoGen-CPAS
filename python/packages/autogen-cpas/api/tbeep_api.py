@@ -22,9 +22,9 @@ def post_message():
     data = request.get_json(force=True, silent=True)
     if not isinstance(data, dict):
         return jsonify({"error": "Invalid JSON"}), 400
-    thread_id = data.get("threadToken")
+    thread_id = data.get("thread_id")
     if not thread_id:
-        return jsonify({"error": "threadToken missing"}), 400
+        return jsonify({"error": "thread_id missing"}), 400
     MESSAGE_STORE.setdefault(thread_id, []).append(data)
     return jsonify({"status": "stored"}), 201
 

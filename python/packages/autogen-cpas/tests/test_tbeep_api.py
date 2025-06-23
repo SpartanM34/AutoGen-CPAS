@@ -10,7 +10,7 @@ def test_post_and_get_message():
     client = app.test_client()
     MESSAGE_STORE.clear()
     msg = {
-        "threadToken": "#TEST_001.0",
+        "thread_id": "#TEST_001.0",
         "instance": "Unit",
         "reasoningLevel": "Detailed",
         "confidence": "High",
@@ -26,7 +26,7 @@ def test_post_and_get_message():
     assert res.get_json() == [msg]
 
 
-def test_missing_thread_token():
+def test_missing_thread_id():
     client = app.test_client()
     MESSAGE_STORE.clear()
     res = client.post("/api/v1/messages", json={"content": "x"})
@@ -57,8 +57,8 @@ def test_post_multiple_messages():
     client = app.test_client()
     MESSAGE_STORE.clear()
     thread_id = "#TEST_MULTI"
-    msg1 = {"threadToken": thread_id, "content": "one"}
-    msg2 = {"threadToken": thread_id, "content": "two"}
+    msg1 = {"thread_id": thread_id, "content": "one"}
+    msg2 = {"thread_id": thread_id, "content": "two"}
     res = client.post("/api/v1/messages", json=msg1)
     assert res.status_code == 201
     res = client.post("/api/v1/messages", json=msg2)
