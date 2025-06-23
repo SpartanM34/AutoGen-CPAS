@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "T-BEEP Message",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string"},
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "role": {
+      "type": "string",
+      "enum": ["user", "assistant", "agent", "system"]
+    },
+    "sender": {"type": "string"},
+    "recipient": {"type": "string"},
+    "content": {"type": "string"},
+    "metadata": {"$ref": "./cpas_metadata.schema.json"}
+  },
+  "required": ["id", "timestamp", "role", "sender", "recipient", "content", "metadata"],
+  "additionalProperties": false
+}
