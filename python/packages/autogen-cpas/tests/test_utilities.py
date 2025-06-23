@@ -128,3 +128,11 @@ def test_seed_token_no_shared_keys() -> None:
     assert similarity_score(token1, token2) == 0.0
     report = compare_seed_tokens(token1, token2)
     assert report["similarity"] == 0.0
+
+
+def test_generate_fingerprint_not_equal() -> None:
+    """Fingerprints should differ for different prompts."""
+    seed = {"model": "m", "alignment_profile": "a"}
+    fp1 = generate_fingerprint("hello", seed)
+    fp2 = generate_fingerprint("bye", seed)
+    assert fp1["fingerprint"] != fp2["fingerprint"]
