@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from uuid import uuid4
 from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict, field_validator
@@ -53,3 +54,16 @@ class TBeepMessage(BaseModel):
 
 class ChatMessage(TBeepMessage):
     """Deprecated alias kept for test compatibility."""
+
+    @classmethod
+    def simple(cls, role: Role, content: str) -> "ChatMessage":
+        """Factory mirroring legacy tests: auto-fills id, timestamp, sender/recipient, metadata."""
+        return cls(
+            id=str(uuid4()),
+            timestamp=datetime.utcnow(),
+            role=role,
+            sender="tester",
+            recipient="echo",
+            content=content,
+            metadata=CPASMetadata(confidence=0.5, rifg=RIFG.MEDIUM, provenance=[]),
+        )
