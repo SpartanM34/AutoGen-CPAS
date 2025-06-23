@@ -33,3 +33,43 @@ def test_validate_fails_on_different_tokens():
     token1 = SeedToken.generate(data1)
     token2 = SeedToken.generate(data2)
     assert not token1.validate(token2)
+
+
+def test_validate_fails_on_alignment_profile_mismatch():
+    data1 = {
+        "id": "1",
+        "model": "GPT",
+        "timestamp": "2025",
+        "alignment_profile": "CPAS",
+        "hash": "abc",
+    }
+    data2 = {
+        "id": "1",
+        "model": "GPT",
+        "timestamp": "2025",
+        "alignment_profile": "OTHER",
+        "hash": "abc",
+    }
+    token1 = SeedToken.generate(data1)
+    token2 = SeedToken.generate(data2)
+    assert not token1.validate(token2)
+
+
+def test_validate_fails_on_hash_mismatch():
+    data1 = {
+        "id": "1",
+        "model": "GPT",
+        "timestamp": "2025",
+        "alignment_profile": "CPAS",
+        "hash": "abc",
+    }
+    data2 = {
+        "id": "1",
+        "model": "GPT",
+        "timestamp": "2025",
+        "alignment_profile": "CPAS",
+        "hash": "xyz",
+    }
+    token1 = SeedToken.generate(data1)
+    token2 = SeedToken.generate(data2)
+    assert not token1.validate(token2)
