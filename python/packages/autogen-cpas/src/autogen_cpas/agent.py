@@ -3,8 +3,15 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
+import asyncio
+import logging
+from typing import Any, Mapping, Sequence
+
 from autogen import ConversableAgent
-from autogen_core import MessageContext, RoutedAgent, message_handler
+from autogen_agentchat.agents import BaseChatAgent
+from autogen_agentchat.base import Response
+from autogen_agentchat.messages import StructuredMessage
+from autogen_core import CancellationToken, MessageContext, RoutedAgent, message_handler
 
 from .models import ChatMessage, CPASMetadata, TBeepMessage
 from .protocol import Role, decode, encode
@@ -58,3 +65,44 @@ class CpasEnabledAgent(ConversableAgent):
             metadata=new_meta,
         )
         return encode(reply)
+
+
+TBeepChatMessage = StructuredMessage[TBeepMessage]
+
+
+class AsyncCpasAgent(BaseChatAgent):
+    """Asynchronous wrapper around :class:`CpasEnabledAgent`."""
+
+    def __init__(self, inner: CpasEnabledAgent) -> None:
+        super().__init__(inner.name, description=f"{inner.name} async wrapper")
+        self._inner = inner
+        logging.info("Wrapping %s with AsyncCpasAgent", inner.name)
+
+    @property
+    def produced_message_types(self) -> Sequence[type[TBeepChatMessage]]:
+        return (TBeepChatMessage,)
+
+    async def a_receive(self, message: Mapping[str, Any], sender: str | None = None) -> Any:
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, self._inner.receive, message, sender)
+
+    async def a_generate_reply(
+        self, messages: Sequence[Mapping[str, Any]], sender: str | None = None
+    ) -> Mapping[str, Any]:
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, self._inner.generate_reply, list(messages), sender)
+
+    async def on_messages(
+        self, messages: Sequence[TBeepChatMessage], cancellation_token: CancellationToken
+    ) -> Response:
+        encoded_messages = []
+        for msg in messages:
+            encoded = encode(msg.content)
+            await self.a_receive(encoded, sender=msg.source)
+            encoded_messages.append(encoded)
+        reply = await self.a_generate_reply(encoded_messages, sender=messages[-1].source)
+        decoded = decode(reply)
+        return Response(chat_message=TBeepChatMessage(content=decoded, source=self.name))
+
+    async def on_reset(self, cancellation_token: CancellationToken) -> None:
+        pass
