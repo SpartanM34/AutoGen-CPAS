@@ -164,3 +164,11 @@ def test_generate_fingerprint_variation(prompt1, prompt2, seed1, seed2) -> None:
     fp1 = generate_fingerprint(prompt1, seed1)
     fp2 = generate_fingerprint(prompt2, seed2)
     assert fp1["fingerprint"] != fp2["fingerprint"]
+
+def test_generate_fingerprint_different_inputs() -> None:
+    """Different prompt and seed token should yield different fingerprints."""
+    seed_a = {"model": "modelA", "alignment_profile": "profileA"}
+    seed_b = {"model": "modelB", "alignment_profile": "profileB"}
+    fp1 = generate_fingerprint("first prompt", seed_a)
+    fp2 = generate_fingerprint("second prompt", seed_b)
+    assert fp1["fingerprint"] != fp2["fingerprint"]
