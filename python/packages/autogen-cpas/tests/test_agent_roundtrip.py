@@ -19,7 +19,7 @@ async def test_agent_roundtrip() -> None:
     await EchoAgent.register(runtime, "echo", EchoAgent)
     runtime.start()
     response = await runtime.send_message(
-        ChatMessage(role=Role.USER, content="ping"), recipient=AgentId("echo", "default")
+        ChatMessage.simple(Role.USER, "ping"), recipient=AgentId("echo", "default")
     )
     await runtime.stop()
     assert isinstance(response, ChatMessage)
@@ -34,7 +34,7 @@ async def test_send_to_unknown_agent_raises() -> None:
     runtime.start()
     with pytest.raises(Exception, match="Recipient not found"):
         await runtime.send_message(
-            ChatMessage(role=Role.USER, content="ping"),
+            ChatMessage.simple(Role.USER, "ping"),
             recipient=AgentId("missing", "default"),
         )
     await runtime.stop()
