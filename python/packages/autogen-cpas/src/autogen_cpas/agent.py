@@ -52,7 +52,7 @@ class EchoAgent(RoutedAgent):
 
     @message_handler
     async def handle_message(self, message: ChatMessage, ctx: MessageContext) -> ChatMessage:
-        return ChatMessage(role=Role.ASSISTANT, content=message.content)
+        return ChatMessage.simple(Role.ASSISTANT, message.content)
 
 
 class CpasEnabledAgent(ConversableAgent):
