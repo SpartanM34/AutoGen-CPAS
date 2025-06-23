@@ -29,6 +29,15 @@ def test_load_baseline_invalid_json(tmp_path, monkeypatch):
     assert metrics_monitor.diff_report({"a": 1.0}) == {"similarity": 0.0}
 
 
+def test_load_baseline_non_dict(tmp_path, monkeypatch):
+    """load_baseline should return empty dict for non-dict JSON."""
+    f = tmp_path / "list.json"
+    f.write_text(json.dumps([1, 2]))
+    monkeypatch.setattr(metrics_monitor, "BASELINE_FILE", f)
+    assert metrics_monitor.load_baseline() == {}
+    assert metrics_monitor.diff_report({"x": 1.0}) == {"similarity": 0.0}
+
+
 def test_diff_report(monkeypatch):
     monkeypatch.setattr(metrics_monitor, "load_baseline", lambda: {"a": 1.0})
     report = metrics_monitor.diff_report({"a": 1.2})
