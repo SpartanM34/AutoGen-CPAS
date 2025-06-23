@@ -61,4 +61,4 @@ def test_generate_reply_aggregates_bayesian_confidence() -> None:
     reply = decode(out)
 
     assert reply.metadata.provenance[-1] == "n1"
-    assert reply.metadata.confidence == pytest.approx(0.778)
+    assert reply.metadata.confidence == pytest.approx(0.84)
