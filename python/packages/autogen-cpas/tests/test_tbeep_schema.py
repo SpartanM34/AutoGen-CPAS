@@ -108,6 +108,6 @@ def test_missing_metadata_field() -> None:
         validate_tbeep_message(msg)
 
 
-def test_protocol_decode_type_error() -> None:
-    with pytest.raises(TypeError):
+def test_protocol_decode_value_error() -> None:
+    with pytest.raises(ValueError):
         protocol.decode("not a dict")
