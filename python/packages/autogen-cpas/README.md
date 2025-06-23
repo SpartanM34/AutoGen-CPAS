@@ -91,7 +91,7 @@ Messages can then be POSTed to `/api/v1/messages` and fetched by thread ID via `
 
 Example usage:
 ```bash
-curl -X POST -H "Content-Type: application/json" -d {"threadToken": "#T1", "content": "hello"} http://localhost:5000/api/v1/messages
+curl -X POST -H "Content-Type: application/json" -d {"thread_id": "#T1", "content": "hello"} http://localhost:5000/api/v1/messages
 curl "http://localhost:5000/api/v1/messages?thread_id=#T1"
 ```
 ### Legacy Web Testing Interface
