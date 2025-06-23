@@ -9,5 +9,4 @@ __all__ = [
     "EchoAgent",
     "CPASMetadata",
     "TBeepMessage",
-    "ChatMessage",
 ]
