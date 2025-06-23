@@ -51,7 +51,7 @@ async def test_cpas_enabled_agents() -> None:
 
     assert decoded.content == "hello"
     assert decoded.metadata.confidence == pytest.approx(0.6)
-    assert decoded.metadata.provenance == ["unit", "receiver"]
+    assert decoded.metadata.provenance == ["unit", "1"]
 
 
 def test_receive_malformed_message_raises() -> None:
@@ -110,5 +110,7 @@ async def test_provenance_accumulates() -> None:
 
     await runtime.stop()
 
-    decoded = decode(r3)
-    assert decoded.metadata.provenance == ["unit", "receiver", "sender", "receiver"]
+    r1_decoded = decode(r1)
+    r2_decoded = decode(r2)
+    r3_decoded = decode(r3)
+    assert r3_decoded.metadata.provenance == ["unit", "1", r1_decoded.id, r2_decoded.id]

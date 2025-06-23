@@ -45,7 +45,7 @@ class CpasEnabledAgent(ConversableAgent):
         new_meta = CPASMetadata(
             confidence=new_confidence,
             rifg=meta.rifg,
-            provenance=[*meta.provenance, self.name],
+            provenance=[*meta.provenance, incoming.id],
             notes=meta.notes,
         )
         reply = TBeepMessage(
