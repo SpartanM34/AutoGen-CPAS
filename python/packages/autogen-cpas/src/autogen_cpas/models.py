@@ -8,13 +8,6 @@ from pydantic import BaseModel, ConfigDict, field_validator
 from .protocol import RIFG, Role
 
 
-class ChatMessage(BaseModel):
-    """Simple chat message used for tests."""
-
-    role: Role
-    content: str
-
-
 class CPASMetadata(BaseModel):
     """Metadata embedded in T-BEEP messages."""
 
@@ -56,3 +49,7 @@ class TBeepMessage(BaseModel):
     def from_dict(cls, data: dict) -> "TBeepMessage":
         """Create a :class:`TBeepMessage` from a dictionary."""
         return cls.model_validate(data)
+
+
+class ChatMessage(TBeepMessage):
+    """Deprecated alias kept for test compatibility."""
