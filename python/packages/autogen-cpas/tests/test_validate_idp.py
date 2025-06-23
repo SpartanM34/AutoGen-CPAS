@@ -1,11 +1,14 @@
 import json
 import logging
 import runpy
+from importlib.resources import files
+
 import pytest
 
 pytest.importorskip("jsonschema")
 
-validate_module = runpy.run_path("python/packages/autogen-cpas/tests/validate_idp.py")
+validate_path = files("autogen_cpas.tests").joinpath("validate_idp.py")
+validate_module = runpy.run_path(str(validate_path))
 validate_instance = validate_module["validate_instance"]
 
 
