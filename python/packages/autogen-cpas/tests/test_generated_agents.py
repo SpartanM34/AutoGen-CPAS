@@ -1,7 +1,7 @@
+import json
 import sys
 import types
 from pathlib import Path
-import json
 
 # Ensure repository root is on sys.path so 'agents' package can be imported
 ROOT = Path(__file__).resolve().parents[4]

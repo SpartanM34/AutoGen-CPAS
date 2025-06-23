@@ -1,6 +1,7 @@
 import json
 
 import pytest
+
 from cpas_autogen import metrics_monitor
 
 
