@@ -2,24 +2,18 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from urllib.parse import urlparse
 from typing import Any, Mapping
 
 from jsonschema import RefResolver, validate, validators
 
-LOCAL_DIR = Path(__file__).parent.parent.parent  # repo root
-SCHEMA_DIR = LOCAL_DIR / "schema"
-
-
-def _schema_uri(name: str) -> str:
-    return (SCHEMA_DIR / name).resolve().as_uri()
+PACKAGE_SCHEMAS = Path(__file__).with_suffix("").parent.parent / "schema"
 
 
 def load_schema(name: str | Path) -> dict:
     """Load a JSON schema by name or path."""
     path = Path(name)
     if not path.is_absolute():
-        path = Path(urlparse(_schema_uri(str(name))).path)
+        path = PACKAGE_SCHEMAS / path
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -28,12 +22,12 @@ def validate_instance(instance: Mapping[str, Any], schema: str | Mapping[str, An
     """Validate ``instance`` against ``schema``.
 
     ``schema`` may be a mapping or the file name of a schema located in
-    the repository ``schema`` directory.
+    the package ``schema`` directory.
     """
     if isinstance(schema, (str, Path)):
         schema_path = Path(schema)
         if not schema_path.is_absolute():
-            schema_path = SCHEMA_DIR / schema_path
+            schema_path = PACKAGE_SCHEMAS / schema_path
         schema = load_schema(schema_path)
         base_uri = schema_path.parent.resolve().as_uri() + "/"
         validator_cls = validators.validator_for(schema)
