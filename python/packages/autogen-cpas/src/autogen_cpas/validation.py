@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from urllib.parse import urlparse
 from typing import Any, Mapping
+from urllib.parse import urlparse
 
 from jsonschema import RefResolver, validate, validators
 

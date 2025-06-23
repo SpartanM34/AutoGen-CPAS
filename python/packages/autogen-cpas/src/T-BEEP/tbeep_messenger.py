@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Utilities for constructing T-BEEP messages."""
 
+import uuid
 from datetime import datetime
 from typing import Any, Optional
-import uuid
 
 from autogen_cpas.models import CPASMetadata, TBeepMessage
 from autogen_cpas.protocol import RIFG, Role

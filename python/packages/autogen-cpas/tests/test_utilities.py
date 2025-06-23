@@ -1,15 +1,16 @@
+import json
 import logging
 from datetime import datetime
-import json
 
 import pytest
+
 from cpas_autogen import (
     continuity_check,
-    should_realign,
+    generate_fingerprint,
     latest_metrics,
     metrics_monitor,
+    should_realign,
     wrap_with_seed_token,
-    generate_fingerprint,
 )
 from cpas_autogen.realignment_trigger import DRIFT_THRESHOLDS
 
@@ -95,7 +96,7 @@ def test_wrap_and_fingerprint():
     assert len(fp["fingerprint"]) == 64
 
 
-from cpas_autogen.instance_diff_engine import similarity_score, compare_seed_tokens
+from cpas_autogen.instance_diff_engine import compare_seed_tokens, similarity_score
 
 
 def test_similarity_score_all_match():
