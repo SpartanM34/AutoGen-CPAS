@@ -65,7 +65,5 @@ class ChatMessage(TBeepMessage):
             sender="tester",
             recipient="echo",
             content=content,
-            metadata=CPASMetadata(
-                confidence=0.5, rifg=RIFG.MEDIUM, provenance=[]
-            ).model_dump(mode="python"),
+            metadata=CPASMetadata(confidence=0.5, rifg=RIFG.MEDIUM, provenance=[]).model_dump(mode="python"),
         )
