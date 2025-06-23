@@ -6,11 +6,11 @@ pytest.importorskip("autogen.core")
 from datetime import datetime
 
 from autogen_core import AgentId, SingleThreadedAgentRuntime
+from pydantic import ValidationError
 
 from autogen_cpas.agent import CpasEnabledAgent
 from autogen_cpas.models import CPASMetadata, TBeepMessage
 from autogen_cpas.protocol import RIFG, Role, decode, encode
-from pydantic import ValidationError
 
 
 @pytest.mark.asyncio

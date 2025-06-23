@@ -20,15 +20,16 @@ autogen_stub.config_list_from_models = lambda models: []
 sys.modules.setdefault("autogen", autogen_stub)
 
 import importlib
-import autogen_cpas.models as models_mod
+
 import autogen_cpas.agent as agent_mod
+import autogen_cpas.models as models_mod
+
 models_mod = importlib.reload(models_mod)
 agent_mod = importlib.reload(agent_mod)
-from autogen_cpas.agent import CpasEnabledAgent, AsyncCpasAgent
-
-from autogen_core import CancellationToken
 from autogen_agentchat.messages import StructuredMessage
+from autogen_core import CancellationToken
 
+from autogen_cpas.agent import AsyncCpasAgent, CpasEnabledAgent
 from autogen_cpas.models import CPASMetadata, TBeepMessage
 from autogen_cpas.protocol import RIFG, Role
 

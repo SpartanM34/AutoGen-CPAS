@@ -1,7 +1,7 @@
+import json
 import sys
 import types
 from pathlib import Path
-import json
 
 # Ensure repository root is on sys.path so 'agents' package can be imported
 ROOT = Path(__file__).resolve().parents[4]
@@ -10,7 +10,14 @@ sys.path.insert(0, str(ROOT / "python" / "packages" / "autogen-cpas" / "src"))
 
 # Provide a minimal stub for the optional 'autogen' dependency
 autogen_stub = types.ModuleType("autogen")
-autogen_stub.ConversableAgent = object
+
+
+class _DummyCA:
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
+
+autogen_stub.ConversableAgent = _DummyCA
 autogen_stub.config_list_from_models = lambda models: []
 sys.modules.setdefault("autogen", autogen_stub)
 
