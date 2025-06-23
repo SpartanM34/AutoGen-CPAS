@@ -124,5 +124,6 @@ Contributions are welcome! Please open issues or pull requests via GitHub.
 > Tagline: **Reflect to Adapt. Standardize to Connect.**
 > Companion: **Coherence through Context. Clarity through Reflection.**
 
-**Repository Maintainer:** [SpartanM34](https://github.com/SpartanM34)  
-**License:** [MIT License](./LICENSE)
+**Repository Maintainer:** [SpartanM34](https://github.com/SpartanM34)
+**Code License:** [MIT License](LICENSE-CODE)
+**Documentation License:** [Creative Commons Attribution 4.0 International](../../../LICENSE)
