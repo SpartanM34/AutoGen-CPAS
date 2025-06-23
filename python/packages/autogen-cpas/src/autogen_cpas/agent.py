@@ -41,7 +41,7 @@ def aggregate_bayesian_confidence(scores: Sequence[float]) -> float:
     posterior = scores[0]
     for score in scores[1:]:
         posterior = _bayesian_confidence(posterior, score)
-    return posterior
+    return _bayesian_confidence(posterior)
 
 
 class EchoAgent(RoutedAgent):
