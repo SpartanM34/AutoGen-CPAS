@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 from jsonschema import RefResolver, validate, validators
 
-PACKAGE_SCHEMAS = Path(__file__).with_suffix("").parent.parent / "schema"
+PACKAGE_SCHEMAS = Path(__file__).parent / "schema"
 
 
 def load_schema(name: str | Path) -> dict:
