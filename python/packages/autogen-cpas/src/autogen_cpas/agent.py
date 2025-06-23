@@ -59,8 +59,8 @@ class EchoAgent(RoutedAgent):
 class CpasEnabledAgent(ConversableAgent):
     """Conversable agent that echoes messages with updated CPAS metadata."""
 
-    def __init__(self, name: str = "bot", **kwargs) -> None:
-        super().__init__(name=name, **kwargs)
+    def __init__(self, name: str = "bot", *args, **kwargs) -> None:
+        super().__init__(name, *args, **kwargs)
 
     def receive(self, message, sender=None, **kwargs):  # type: ignore[override]
         """Validate ``message`` using :func:`decode` before delegating."""

@@ -12,7 +12,14 @@ from autogen_cpas.protocol import RIFG, Role, decode, encode
 
 # Stub optional autogen dependency
 autogen_stub = types.ModuleType("autogen")
-autogen_stub.ConversableAgent = object
+
+
+class _DummyCA:
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
+
+autogen_stub.ConversableAgent = _DummyCA
 autogen_stub.config_list_from_models = lambda models: []
 sys.modules.setdefault("autogen", autogen_stub)
 
