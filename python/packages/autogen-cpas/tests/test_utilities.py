@@ -11,6 +11,7 @@ from cpas_autogen import (
     wrap_with_seed_token,
     generate_fingerprint,
 )
+from cpas_autogen.realignment_trigger import DRIFT_THRESHOLDS
 
 
 def test_continuity_check_success():
@@ -33,6 +34,11 @@ def test_should_realign_false():
 def test_should_realign_true():
     m = {"symbolic_density": 0.1, "interpretive_bandwidth": 1.0, "divergence_score": 1.0}
     assert should_realign(m)
+
+
+def test_should_realign_thresholds():
+    metrics = DRIFT_THRESHOLDS.copy()
+    assert not should_realign(metrics)
 
 
 def test_latest_metrics_missing(monkeypatch, tmp_path):
