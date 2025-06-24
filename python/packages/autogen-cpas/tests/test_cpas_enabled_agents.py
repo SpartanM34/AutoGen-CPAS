@@ -1,16 +1,15 @@
-import pytest
-
-pytest.importorskip("autogen")
-pytest.importorskip("autogen.core")
-
 from datetime import datetime
 
+import pytest
 from autogen_core import AgentId, SingleThreadedAgentRuntime
 from pydantic import ValidationError
 
 from autogen_cpas.agent import CpasEnabledAgent
 from autogen_cpas.models import CPASMetadata, TBeepMessage
 from autogen_cpas.protocol import RIFG, Role, decode, encode
+
+pytest.importorskip("autogen")
+pytest.importorskip("autogen.core")
 
 
 @pytest.mark.asyncio

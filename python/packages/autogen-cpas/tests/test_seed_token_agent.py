@@ -1,10 +1,10 @@
-import pytest
-
-pytest.importorskip("autogen")
 import logging
 import types
 
+import pytest
 from agents.python import Lumin
+
+pytest.importorskip("autogen")
 
 
 class DummyAgent:

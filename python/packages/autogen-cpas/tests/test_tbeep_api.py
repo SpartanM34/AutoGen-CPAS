@@ -1,9 +1,10 @@
-import pytest
-
-pytest.importorskip("flask")
 import json
 
+import pytest
+
 from api.tbeep_api import MESSAGE_STORE, app
+
+pytest.importorskip("flask")
 
 
 def test_post_and_get_message():
