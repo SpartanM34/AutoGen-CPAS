@@ -83,7 +83,7 @@ dev = [
 [tool.ruff]
 extend = "../../pyproject.toml"
 exclude = ["build", "dist", "src/autogen_core/application/protos", "tests/protos"]
-include = ["src/**", "docs/**/*.ipynb", "tests/**"]
+include = ["src/**/*.py", "docs/**/*.ipynb", "tests/**/*.py"]
 
 [tool.ruff.lint.per-file-ignores]
 "docs/**.ipynb" = ["T20"]

@@ -36,7 +36,7 @@ packages = [
 
 [tool.ruff]
 extend = "../../pyproject.toml"
-include = ["src/**", "tests/*.py"]
+include = ["src/**/*.py", "tests/**/*.py"]
 
 [tool.pyright]
 extends = "../../pyproject.toml"

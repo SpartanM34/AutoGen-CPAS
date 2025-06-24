@@ -21,7 +21,7 @@ gen-component-schema="component_schema_gen.__main__:main"
 
 [tool.ruff]
 extend ="../../pyproject.toml"
-include=[ "src/**" ]
+include=[ "src/**/*.py" ]
 
 [tool.ruff.lint]
 ignore=[ "T201" ]
