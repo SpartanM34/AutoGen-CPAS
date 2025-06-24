@@ -1,5 +1,6 @@
 import asyncio
 from dataclasses import dataclass
+from typing import Any
 
 import pytest
 from autogen_core import (
@@ -68,11 +69,21 @@ async def test_cancellation_with_token() -> None:
     await LongRunningAgent.register(runtime, "long_running", LongRunningAgent)
     agent_id = AgentId("long_running", key="default")
     token = CancellationToken()
-    response = asyncio.create_task(runtime.send_message(MessageType(), recipient=agent_id, cancellation_token=token))
+    message_enqueued = asyncio.Event()
+    orig_put = runtime._message_queue.put  # type: ignore[attr-defined]
+
+    async def put_with_event(item: Any) -> None:
+        await orig_put(item)
+        message_enqueued.set()
+
+    runtime._message_queue.put = put_with_event  # type: ignore[attr-defined]
+
+    response = asyncio.create_task(
+        runtime.send_message(MessageType(), recipient=agent_id, cancellation_token=token)
+    )
     assert not response.done()
 
-    while runtime.unprocessed_messages_count == 0:
-        await asyncio.sleep(0.01)
+    await message_enqueued.wait()
 
     await runtime._process_next()  # type: ignore
 
@@ -101,11 +112,19 @@ async def test_nested_cancellation_only_outer_called() -> None:
     long_running_id = AgentId("long_running", key="default")
     nested_id = AgentId("nested", key="default")
     token = CancellationToken()
+    message_enqueued = asyncio.Event()
+    orig_put = runtime._message_queue.put  # type: ignore[attr-defined]
+
+    async def put_with_event(item: Any) -> None:
+        await orig_put(item)
+        message_enqueued.set()
+
+    runtime._message_queue.put = put_with_event  # type: ignore[attr-defined]
+
     response = asyncio.create_task(runtime.send_message(MessageType(), nested_id, cancellation_token=token))
     assert not response.done()
 
-    while runtime.unprocessed_messages_count == 0:
-        await asyncio.sleep(0.01)
+    await message_enqueued.wait()
 
     await runtime._process_next()  # type: ignore
     token.cancel()
@@ -137,11 +156,19 @@ async def test_nested_cancellation_inner_called() -> None:
     nested_id = AgentId("nested", key="default")
 
     token = CancellationToken()
+    message_enqueued = asyncio.Event()
+    orig_put = runtime._message_queue.put  # type: ignore[attr-defined]
+
+    async def put_with_event(item: Any) -> None:
+        await orig_put(item)
+        message_enqueued.set()
+
+    runtime._message_queue.put = put_with_event  # type: ignore[attr-defined]
+
     response = asyncio.create_task(runtime.send_message(MessageType(), nested_id, cancellation_token=token))
     assert not response.done()
 
-    while runtime.unprocessed_messages_count == 0:
-        await asyncio.sleep(0.01)
+    await message_enqueued.wait()
 
     await runtime._process_next()  # type: ignore
     # allow the inner agent to process

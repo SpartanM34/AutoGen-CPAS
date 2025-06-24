@@ -120,10 +120,11 @@ class RunContext:
         self._runtime._message_queue.shutdown(immediate=True)  # type: ignore
         await self._run_task
 
-    async def stop_when(self, condition: Callable[[], bool], check_period: float = 1.0) -> None:
+    async def stop_when(self, condition: Callable[[], bool], *, condition_event: asyncio.Event) -> None:
         async def check_condition() -> None:
             while not condition():
-                await asyncio.sleep(check_period)
+                await condition_event.wait()
+                condition_event.clear()
             await self.stop()
 
         await asyncio.create_task(check_condition())
@@ -852,23 +853,20 @@ class SingleThreadedAgentRuntime(AgentRuntime):
             self._run_context = None
             self._message_queue = Queue()
 
-    async def stop_when(self, condition: Callable[[], bool]) -> None:
+    async def stop_when(self, condition: Callable[[], bool], *, condition_event: asyncio.Event) -> None:
         """Stop the runtime message processing loop when the condition is met.
 
         .. caution::
 
-            This method is not recommended to be used, and is here for legacy
-            reasons. It will spawn a busy loop to continually check the
-            condition. It is much more efficient to call `stop_when_idle` or
-            `stop` instead. If you need to stop the runtime based on a
-            condition, consider using a background task and asyncio.Event to
-            signal when the condition is met and the background task should call
-            stop.
+            This method is not recommended to be used. It expects an
+            ``asyncio.Event`` that will be set whenever the condition may have
+            changed. Use :py:meth:`stop_when_idle` or :py:meth:`stop` when
+            possible.
 
         """
         if self._run_context is None:
             raise RuntimeError("Runtime is not started")
-        await self._run_context.stop_when(condition)
+        await self._run_context.stop_when(condition, condition_event=condition_event)
 
         self._run_context = None
         self._message_queue = Queue()
