@@ -202,6 +202,6 @@ async def test_token_limited_model_context_openai_with_function_result(
 
     retrieved = await model_context.get_messages()
     assert len(retrieved) == 3  # Token limit set very low, will remove 1 of the messages
-    assert type(retrieved[0]) == UserMessage  # Function result should be removed
-    assert type(retrieved[1]) == AssistantMessage
-    assert type(retrieved[2]) == UserMessage
+    assert isinstance(retrieved[0], UserMessage)  # Function result should be removed
+    assert isinstance(retrieved[1], AssistantMessage)
+    assert isinstance(retrieved[2], UserMessage)
