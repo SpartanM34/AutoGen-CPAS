@@ -86,8 +86,22 @@ def analyze(entries):
 
 
 def save_results(results, path: Path):
-  with path.open("w") as f:
-    json.dump(results, f, indent=2)
+  existing: list[dict] = []
+  if path.exists():
+    try:
+      with path.open("r", encoding="utf-8") as f:
+        existing = json.load(f)
+    except Exception:
+      existing = []
+  latest_ts = None
+  if existing:
+    latest_ts = existing[-1].get("timestamp")
+  new_entries = results
+  if latest_ts is not None:
+    new_entries = [r for r in results if r["timestamp"] > latest_ts]
+  existing.extend(new_entries)
+  with path.open("w", encoding="utf-8") as f:
+    json.dump(existing, f, indent=2)
 
 
 

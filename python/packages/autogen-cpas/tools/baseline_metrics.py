@@ -60,11 +60,15 @@ def main():
     examples_dir = Path(__file__).resolve().parents[1] / "docs" / "examples"
     examples_dir.mkdir(parents=True, exist_ok=True)
     out_file = examples_dir / "baseline_metrics.json"
-    data = {}
+    entry = {"timestamp": datetime.utcnow().isoformat(), **metrics}
+    data: list[dict] = []
     if out_file.exists():
-        with open(out_file, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    data[datetime.utcnow().isoformat()] = metrics
+        try:
+            with open(out_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception:
+            data = []
+    data.append(entry)
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
