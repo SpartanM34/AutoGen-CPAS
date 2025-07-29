@@ -85,10 +85,14 @@ def save_baseline(metrics: dict) -> None:
 
 
 def log_results(metrics: dict) -> None:
-    data = {}
+    entry = {"timestamp": datetime.utcnow().isoformat(), **metrics}
+    data: list[dict] = []
     if LOG_FILE.exists():
-        data = json.loads(LOG_FILE.read_text())
-    data[datetime.utcnow().isoformat()] = metrics
+        try:
+            data = json.loads(LOG_FILE.read_text())
+        except Exception:
+            data = []
+    data.append(entry)
     LOG_FILE.write_text(json.dumps(data, indent=2))
 
 
