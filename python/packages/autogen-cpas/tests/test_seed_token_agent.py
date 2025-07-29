@@ -20,6 +20,11 @@ class DummyAgent:
 def test_create_agent_has_seed_token(monkeypatch):
     monkeypatch.setattr(Lumin, "ConversableAgent", DummyAgent)
     Lumin.config_list = [{}]
+    monkeypatch.setattr(Lumin, "retrieve_digests", lambda *a, **k: [])
+    monkeypatch.setattr(Lumin, "rehydrate_context", lambda *a, **k: None)
+    monkeypatch.setattr(Lumin.atexit, "register", lambda f: None)
+    monkeypatch.setattr(Lumin, "store_digest", lambda *a, **k: None)
+    monkeypatch.setattr(Lumin, "generate_digest", lambda *a, **k: {})
     agent = Lumin.create_agent()
     assert hasattr(agent, "seed_token")
     assert agent.seed_token is not None
@@ -28,6 +33,11 @@ def test_create_agent_has_seed_token(monkeypatch):
 def test_send_message_warns_on_continuity_failure(monkeypatch, caplog):
     monkeypatch.setattr(Lumin, "ConversableAgent", DummyAgent)
     Lumin.config_list = [{}]
+    monkeypatch.setattr(Lumin, "retrieve_digests", lambda *a, **k: [])
+    monkeypatch.setattr(Lumin, "rehydrate_context", lambda *a, **k: None)
+    monkeypatch.setattr(Lumin.atexit, "register", lambda f: None)
+    monkeypatch.setattr(Lumin, "store_digest", lambda *a, **k: None)
+    monkeypatch.setattr(Lumin, "generate_digest", lambda *a, **k: {})
     agent = Lumin.create_agent()
     caplog.set_level(logging.WARNING)
     Lumin.send_message(agent, "hello", thread_token="INVALID")
@@ -37,6 +47,11 @@ def test_send_message_warns_on_continuity_failure(monkeypatch, caplog):
 def test_send_message_invokes_metric_monitor(monkeypatch):
     monkeypatch.setattr(Lumin, "ConversableAgent", DummyAgent)
     Lumin.config_list = [{}]
+    monkeypatch.setattr(Lumin, "retrieve_digests", lambda *a, **k: [])
+    monkeypatch.setattr(Lumin, "rehydrate_context", lambda *a, **k: None)
+    monkeypatch.setattr(Lumin.atexit, "register", lambda f: None)
+    monkeypatch.setattr(Lumin, "store_digest", lambda *a, **k: None)
+    monkeypatch.setattr(Lumin, "generate_digest", lambda *a, **k: {})
     agent = Lumin.create_agent()
 
     monkeypatch.setattr(Lumin, "latest_metrics", lambda: {"interpretive_bandwidth": 1.0})

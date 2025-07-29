@@ -43,6 +43,11 @@ def test_create_agent(monkeypatch):
     monkeypatch.setattr(Telos, "ConversableAgent", StubAgent)
     monkeypatch.setattr(Telos, "config_list_from_models", lambda models: ["cfg"])
     monkeypatch.setattr(Telos, "config_list", ["cfg"])
+    monkeypatch.setattr(Telos, "retrieve_digests", lambda *a, **k: [])
+    monkeypatch.setattr(Telos, "rehydrate_context", lambda *a, **k: None)
+    monkeypatch.setattr(Telos.atexit, "register", lambda f: None)
+    monkeypatch.setattr(Telos, "store_digest", lambda *a, **k: None)
+    monkeypatch.setattr(Telos, "generate_digest", lambda *a, **k: {})
     agent = Telos.create_agent()
     assert isinstance(agent, StubAgent)
     assert agent.idp_metadata["instance_name"] == "Telos"
@@ -57,6 +62,7 @@ def test_send_message(monkeypatch):
     monkeypatch.setattr(Telos, "latest_metrics", lambda: {})
     monkeypatch.setattr(Telos, "periodic_metrics_check", lambda a, m: None)
     monkeypatch.setattr(Telos, "should_realign", lambda m: False)
+    monkeypatch.setattr(Telos, "generate_digest", lambda *a, **k: {})
     result = Telos.send_message(agent, "hi", "#COMM_PROTO_X")
     assert result["role"] == "assistant"
     assert agent.last_fingerprint is not None

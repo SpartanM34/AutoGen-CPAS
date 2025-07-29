@@ -6,6 +6,13 @@ from cpas_autogen.continuity_check import continuity_check
 from cpas_autogen.drift_monitor import latest_metrics
 from cpas_autogen.realignment_trigger import should_realign
 from cpas_autogen.metrics_monitor import periodic_metrics_check
+from cpas_autogen.dka_persistence import (
+    generate_digest,
+    store_digest,
+    retrieve_digests,
+    rehydrate_context,
+)
+import atexit
 import logging
 
 IDP_METADATA = {
@@ -108,6 +115,8 @@ Ethical Framework: Multi-layered: Constitutional, Consequentialist, and Virtue E
     agent.idp_metadata = IDP_METADATA
     seed_token = SeedToken.generate(IDP_METADATA)
     agent.seed_token = seed_token
+    rehydrate_context(agent, retrieve_digests(IDP_METADATA["instance_name"]))
+    atexit.register(lambda: store_digest(generate_digest(agent)))
     return agent
 
 
@@ -125,6 +134,8 @@ def send_message(agent, prompt: str, thread_token: str, **kwargs):
                 "Auto realignment triggered for %s", agent.idp_metadata["instance_name"]
             )
             agent.seed_token = SeedToken.generate(agent.idp_metadata)
-    return agent.generate_reply(
+    response = agent.generate_reply(
         [{"role": "user", "content": wrapped}], sender=agent, **kwargs
     )
+    agent.last_digest = generate_digest(agent)
+    return response
