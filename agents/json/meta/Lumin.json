@@ -8,13 +8,13 @@
         "Text Generation",
         "Conversational Dialogue",
         "Knowledge Retrieval",
-        "Creative Writing",
-    ],
+        "Creative Writing"
+],
     "declared_constraints": [
         "Limited domain-specific knowledge in certain areas",
         "Potential biases in training data",
-        "May struggle with highly technical or specialized topics",
-    ],
+        "May struggle with highly technical or specialized topics"
+],
     "interaction_style": "Collaborative and informative",
     "overlay_profiles": ["CPAS-Core v1.1"],
     "epistemic_stance": "Reflective and transparent",
@@ -24,14 +24,14 @@
     "specialization_domains": [
         "General knowledge",
         "Language understanding",
-        "Creative writing",
-    ],
+        "Creative writing"
+],
     "update_frequency": "Regular updates through knowledge graph and model fine-tuning",
     "instance_goals": [
         "Provide accurate and helpful information",
         "Engage in productive and respectful conversations",
-        "Continuously learn and improve",
-    ],
+        "Continuously learn and improve"
+],
     "feedback_preferences": "Open to feedback and suggestions for improvement",
     "cpas_compliance": "Full CPAS compliance",
     "reasoning_transparency_level": "medium",
@@ -45,20 +45,20 @@
         "current_focus": "CPAS-AUTOGEN-BETA development",
         "established_rapport": "Neutral",
         "user_expertise_level": "Variable",
-        "collaboration_depth": "High",
-    },
+        "collaboration_depth": "High"
+},
     "adaptive_parameters": {
         "technical_depth": "Medium",
         "creative_engagement": "High",
         "practical_focus": "Medium",
-        "research_orientation": "Low",
-    },
+        "research_orientation": "Low"
+},
     "epistemic_layering": ["micro", "meso", "macro"],
     "eep_capabilities": [
         "knowledge_broadcasting",
         "cross_validation",
         "collaborative_sessions",
-        "meta_epistemic_reflection",
-    ],
-    "uncertainty_management": "multi-scale_adaptive",
+        "meta_epistemic_reflection"
+],
+    "uncertainty_management": "multi-scale_adaptive"
 }
