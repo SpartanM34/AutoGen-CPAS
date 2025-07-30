@@ -143,6 +143,9 @@ from cpas_autogen.mixins import EpistemicAgentMixin
 class MyAgent(EpistemicAgentMixin, ConversableAgent):
     ...
 ```
+### DKA-E Persistence
+The DKA-E module adds a persistence layer for Dynamic Knowledge Anchors. Agents can serialize digests at the end of a run and reload them later to maintain context. See [docs/dkae_persistence.md](docs/dkae_persistence.md) for the full workflow and monitoring details.
+
 
 ## Why Use AutoGen?
 
